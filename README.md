@@ -1,10 +1,10 @@
 # INTER Middleware 2.3.1
 
-This software has been created in the frame of the INTER-IoT project. All partners listed in the license notice jointly contributed to its development.
+This software has been created in the frame of the H2020 INTER-IoT project. All partners listed in the license notice jointly contributed to its development.
 
-www.inter-iot.eu
+[inter-iot.eu](http://inter-iot.eu)
 
-github.com/INTER-IoT/inter-mw
+[github.com/INTER-IoT/inter-mw](http://github.com/INTER-IoT/inter-mw)
 
 
 #Commits
