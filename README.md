@@ -20,12 +20,14 @@ Or follow Inter-IoT inter-mw deployment information online.
 
 For deployment within AIoTES 2.0 framework, follow only the configuration instructions of the ACTIVAGE documentation, or directly the AIoTES 2.0 guide.
 
+Inter-MW requires to use the IPSM component, which must be installed and properly configured for this aim
+
 
 ## Further relevant documentation
 
 - API guide (swagger interface also provides this information)
 - Guide for bridge creation  or  online instructions from the Inter-IoT project
 
-Inter-MW requires to use the IPSM component, which must be installed and properly configured for this aim
+
 
 
