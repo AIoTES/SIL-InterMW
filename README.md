@@ -7,21 +7,21 @@ This software has been created in the frame of the H2020 INTER-IoT project. All 
 [github.com/INTER-IoT/inter-mw](http://github.com/INTER-IoT/inter-mw)
 
 
-#Commits
+## Commits
 
 This repository is the result of cumulative developments in technical work packages of the INTER-IoT project. 
 All project partners listed in the license notice jointly contributed to the content of this commit.
 This repository contains the code of Inter-MW v 2.3.1 (stable version)
  
 
-#Deployment & Configuration
+## Deployment & Configuration
 Follow the SIL deployment guide or Inter-MW deployment guide from ACTIVAGE for standalone deployment & configuration.
 Or follow Inter-IoT inter-mw deployment information online.
 
 For deployment within AIoTES 2.0 framework, follow only the configuration instructions of the ACTIVAGE documentation, or directly the AIoTES 2.0 guide.
 
 
-#Further relevant documentation
+## Further relevant documentation
 
 - API guide (swagger interface also provides this information)
 - Guide for bridge creation  or  online instructions from the Inter-IoT project
