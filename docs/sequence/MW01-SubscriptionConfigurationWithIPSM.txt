@@ -1,0 +1,32 @@
+title MW01, Subscription Request Configuration including IPSM
+
+actor INTER-IoT User
+participant "API\nRequest\nManager" as RM
+participant "Platforms\nRequest\nManager" as PRM
+participant "Platform Registry\n& Capabilities" as PRC
+participant IPSM
+participant "Bridge i" as Bi
+participant "IoT Platform i" as Pi
+
+autonumber
+INTER-IoT User->RM:call(callback, message{"subscribe",all plats,\nall devs, filter=X})
+RM->RM:uniqueCallID=createUniqueId(timestamp, ...)
+note over RM:RM holds mappings - [uniqueCallID, callback]
+
+RM->RM:message.uniqueFlowID=createUniqueID\n(message)
+note over RM:RM holds mappings - [uniqueFlowID, uniqueCallID]
+RM-#green>PRM:publish(message)
+PRM->PRC:getPlatforms(all)
+
+PRC-->PRM:response({...<Bi,Ai>...})
+parallel
+parallel off
+INTER-IoT User<--RM:uniqueCallId
+alt new flow = T
+par for each bridge Bi
+PRM-#green>IPSM:publish(bridgeBiRequestsTopicId, "subscribe",\nuniqueFlowId, IIOTJS{all,filter=X, Og})
+IPSM-#green>Bi:publish(bridgeBiRequestsTopicId, "subscribe",\nuniqueFlowId, IIOTJS{all,filter=X, Og})
+Bi->Pi:subscribe(platform specific parameters)
+Bi<--Pi:ok
+end
+end

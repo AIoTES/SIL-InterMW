@@ -1,0 +1,73 @@
+title MW04, Resource Discovery
+
+#supported participant types: participant, actor, boundary, control, entity, database
+
+actor "INTER-IoT User" as actor
+
+participant "API Request Manager" as ARM
+participant "Platform Request Manager" as PRM
+participant "Resource Discovery" as RD
+database "Resource Registry" as RR
+participant "Platform Registry & Capabilities" as PRC
+participant "Data Flow\nManager" as DFM
+participant IPSM
+participant "Bridge_i" as Bi
+entity "Platform_i" as Pi
+
+autonumber
+
+actor->ARM:call("discovery", callback, {resource_type})
+ARM->ARM:uniqueCallID=createUniqueId(timestamp, ...)
+note over ARM:ARM holds mappings - [uniqueCallID, callback]
+
+ARM->PRM:execute(uniqueCallID, \naction{"discovery", {resource_type}})
+
+PRM->RD:discovery_request (resource_type)
+RD->RR:query (resource_type_filter)
+RD<--RR:resources_list
+PRM<--RD:resources_list
+PRM->PRM:uniqueFlowID=createUniqueID(resource_type)
+PRM-->ARM:uniqueFlowID, {resources_list, launched_platform_query T/F}
+ARM-->actor:uniqueCallId
+actor<--ARM:,\n  publish(IIOTJS{{resources_list, \nlaunched_platform_query T/F},Og})
+alt if launched_platform_query=T
+PRM->PRC:get_platforms (resource_type)
+
+PRM<--PRC:response({<B1,A1>, <B2, A2>, ...<Bn, An>})
+PRM->DFM:createFlow(uniqueFlowID, {<B1,A1>, <B2, A2>, ...<An, Bn>}, IPSM, PRM, {RD, RM})\n //note that we add also the Resource Discovery component in in the flow, so it receives fresh results
+abox over DFM:See sequence diagram\n**++Flow Creation Including IPSM++**
+PRM<--DFM:created new flow T/F
+
+loop for each Bi
+PRM-#green>IPSM:publish(uniqueFlowID, "discovery", IIOTJS{resource_type, Og})
+IPSM-#green>Bi:publish(uniqueFlowID,\n "discovery", IIOTJS{resource_type, Og})
+Bi->Pi:discovery(platform specific parameters)
+Bi<--Pi:ok
+
+
+end
+par PRM waits for for results
+note over PRM:PRM waits for responses (messages)\n through the //uniqueFlowID// with a timeout. 
+abox over PRM#green: For a detailed specification see sequence\n**++Subscription Data Flow with Semantic Translation++**\nsteps 1 - 3
+end
+
+PRM->PRM:combine_responses(results[])
+
+abox over PRM#green:What follows are steps 4-5 from \n**++Subscription Data Flow with Semantic Translation++**.\nThe combined result is sent to the caller
+parallel
+PRM-#green>ARM:publish(uniqueFlowId, IIOTJS{M1,Og})
+PRM-#green>RD:publish(uniqueFlowId, IIOTJS{M1,Og})
+parallel off
+RD->RR:create/update_entries(resources_list)\n//each resource contains also a platform ID 
+
+note over ARM:Use subscribersTo() function\nto get the final list of\nsubscribers to this message
+
+ARM->actor: publish(IIOTJS{M1,Og})
+
+PRM->DFM:releaseFlow(uniqueFlowID)
+abox over DFM:See sequence diagram\n**++Unsubscribe++**\n steps 100-120
+PRM<--DFM:flow destroyed T/F
+
+
+
+end

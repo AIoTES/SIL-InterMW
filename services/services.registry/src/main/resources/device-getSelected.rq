@@ -1,0 +1,20 @@
+PREFIX mdw: <http://interiot.eu/ont/middleware.owl#>
+PREFIX clients: <http://interiot.eu/clients#>
+PREFIX subscriptions: <http://interiot.eu/clients#>
+SELECT *
+WHERE {
+  GRAPH <http://devices> {
+    ?deviceId mdw:hostedBy ?hostedBy;
+        mdw:name ?name;
+        mdw:location ?location;
+        mdw:type ?type;
+        OPTIONAL { ?deviceId mdw:hosts ?hosts; }
+        OPTIONAL { ?deviceId mdw:isForProperty ?isForProperty; }
+        OPTIONAL { ?deviceId mdw:madeActuation ?madeActuation; }
+        OPTIONAL { ?deviceId mdw:implementsProcedure ?implementsProcedure; }
+        OPTIONAL { ?deviceId mdw:observes ?observes; }
+        OPTIONAL { ?deviceId mdw:detects ?detects; }
+        OPTIONAL { ?deviceId mdw:madeObservation ?madeObservation; }
+    FILTER(?deviceId in (%DEVICE_ID_LIST%))
+  }
+}

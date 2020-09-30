@@ -1,0 +1,30 @@
+title MW05, Unsubscribe from topic
+
+actor INTER-IoT User
+participant "API\nRequest\nManager" as RM
+participant "Platforms\nRequest\nManager" as PRM
+participant "Data Flow\nManager" as DFM
+participant IPSM
+participant "Bridge 1" as B1
+participant "Bridge 2" as B2
+
+INTER-IoT User->RM:call("unsubscribe", callback, {subscriptionUniqueCallID})
+RM->RM:uniqueCallID=createUniqueId(timestamp, ...)
+RM->RM:uniqueFlowID=getUniqueFlowID(subscriptionUniqueCallID)
+note over RM: Delete UniqueCallId to UniqueFlowID mapping
+RM->RM:count=getFlowIdCount(uniqueFlowID)
+INTER-IoT User<--RM:Ok
+alt if count=0
+RM->PRM:execute(uniqueCallID,{releaseFlow, uniqueFlowID})
+
+PRM->DFM:releaseFlow(uniqueFlowID)
+PRM<--DFM:ok
+DFM->IPSM:releaseFlow(uniqueFlowID)
+DFM<--IPSM:ok
+DFM->B1:releaseFlow(uniqueFlowID)
+DFM<--B1:ok
+DFM->B2:releaseFlow(uniqueFlowID)
+DFM<--B2:ok
+PRM<--DFM:flow released T/F
+RM<--PRM:ok
+end

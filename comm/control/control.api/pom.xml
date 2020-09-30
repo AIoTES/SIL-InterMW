@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>control.api</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Common control components API</name>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>control</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.interiot.intermw</groupId>
+            <artifactId>mw.commons.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.interiot.intermw</groupId>
+            <artifactId>mw.comm.broker.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.interiot.intermw</groupId>
+            <artifactId>comm.commons.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+    </dependencies>
+</project>

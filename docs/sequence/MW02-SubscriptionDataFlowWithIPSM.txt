@@ -1,0 +1,23 @@
+title MW02, Subscription Data Flow with Semantic Translation
+
+participant "IoT Platform 1" as P1
+participant "Bridge 1" as B1
+participant IPSM
+participant "Platforms\nRequest\nManager" as PRM
+participant "API\nRequest\nManager" as RM
+actor "External Actors" as ExtActors
+
+autonumber
+P1-#green>B1: publish(P1,Format{M1,O1})
+note over B1:JSON formatting\nto IIOTJSON
+
+
+B1-#green>IPSM:publish(uniqueFlowId, IIOTJS{M1,O1})
+note over IPSM:Semantic annotation\nSemantic Translation\nJSON formatting
+
+IPSM-#green>PRM:publish(uniqueFlowId, IIOTJS{M1,Og})
+
+PRM-#green>RM:publish(uniqueFlowId, IIOTJS{M1,Og})
+note over RM:Use subscribersTo() function\nto get the final list of\nsubscribers to this message
+
+RM-#green>ExtActors:callback(IIOTJS{M1,Og})

@@ -1,0 +1,24 @@
+title New info from A pushed to topic INTER-IoT dev subscribed
+
+actor Platform A
+participant Bridge A
+participant Message Broker
+participant Publish/Subscribe Context
+participant IPSM
+actor INTER-IoT Dev
+
+
+note left of Platform A:Message 1 Ontology A <=> (M1,A)
+Platform A->Bridge A:Publish (M1,A,source_id_a)
+note left of Bridge A:Bridge knows the platform_id since\nthere is one bridge instance per\nconnected platform. A proposed\nalgorithm to compose a unique id is:\n**composed_source_id = source_id_a+'@'+platform_id
+Bridge A->Message Broker:Publish (M1,A,composed_source_id)**
+
+note left of Message Broker:INTER-IoT ID <=> iid
+Message Broker->Publish/Subscribe Context:Publish (M1,A,composed_source_id)
+alt User can suscribe in a known platform ontology
+Publish/Subscribe Context->INTER-IoT Dev:Publish (M1,A,//callback_addr//,composed_source_id) 
+else Or can subscribe in the common ontology
+Publish/Subscribe Context->IPSM:translate (from A, to COMMON, M1)
+Publish/Subscribe Context<-IPSM:sensor_data (M1'COMMON,COMMON)
+Publish/Subscribe Context->INTER-IoT Dev:publish (M1'COMMON, //callback_addr//,composed_source_id)
+end

@@ -1,0 +1,63 @@
+title MW03, Query for temperature readings in a geographical area (lat, lon, r)
+
+actor INTER-IoT User
+participant "API\nRequest\nManager" as RM
+participant "Platforms\nRequest\nManager" as PRM
+participant "Platform Registry\nand Capabilities" as PRC
+participant "Data Flow\nManager" as DFM
+participant IPSM
+participant "Bridge i" as Bi
+participant "IoT Platform i" as Pi
+participant "Platform Registry\n& Capabilities" as PRC
+
+autonumber
+INTER-IoT User->RM:call("query", callback, {inter-iot-query})
+note left of RM://Example://\n select composed_source_id, value \n where sensor.type=INTER_IoT.type.temperature\n and sensor.location in area(lat, lon, r)
+
+RM->RM:uniqueCallID=createUniqueId(timestamp, ...)
+note over RM:RM holds mappings - [uniqueCallID, callback]
+
+RM->PRM:execute(uniqueCallID, \naction{query, {inter-iot-query}})
+PRM->PRC:getPlatforms(all)
+
+PRC-->PRM:response({...<Bi,Ai>...})
+
+PRM->PRC:getPlatfomsProperties(...)
+note over PRC,PRM:analyzing a query can be quite complex,\ndepending of the requirements.\nFor example, specific platform syntax,\npre/post processing for each platform etc.\nWe may even need IPSM in the loop.
+PRM<--PRC:QCollection=query split per platform, with additional attributes
+PRM->PRM:uniqueFlowID=createUniqueID(query, QCollection)
+parallel
+RM<--PRM:uniqueFlowID
+PRM->DFM:createFlow(uniqueFlowID, {...<Bi,Ai>...})
+parallel off
+INTER-IoT User<--RM:uniqueCallId
+abox over DFM:See sequence diagram\n**++Flow Creation Including IPSM++**
+PRM<--DFM:created new flow T/F
+alt new flow = T
+par for each bridge Bi
+PRM-#green>IPSM:publish(uniqueFlowID, "executeQuery",IIOTJS{QCollection[i], Og})
+IPSM-#green>Bi:publish(uniqueFlowID,\n "executeQuery", IIOTJS{QCollection[i], Oi})
+Bi->Pi:executeQuery(platform specific parameters)
+Bi<--Pi:ok
+end
+end
+
+
+
+par PRM waits for for results
+note over PRM:PRM waits for responses (messages)\n through the //uniqueFlowID// with a timeout. 
+abox over PRM#green: For a detailed specification see sequence\n**++Subscription Data Flow with Semantic Translation++**\nsteps 1 - 3
+end
+
+PRM->PRM:combine_responses(results[])
+
+abox over PRM#green:What follows are steps 4-5 from \n**++Subscription Data Flow with Semantic Translation++**.\nThe combined query result is sent to the caller
+PRM-#green>RM:publish(uniqueFlowId, IIOTJS{M1,Og})
+note over RM:Use subscribersTo() function\nto get the final list of\nsubscribers to this message
+
+RM->INTER-IoT User: publish(IIOTJS{M1,Og})
+
+PRM->DFM:releaseFlow(uniqueFlowID)
+abox over DFM:See sequence diagram\n**++Unsubscribe++**\n steps 100-120
+PRM<--DFM:flow released T/F
+

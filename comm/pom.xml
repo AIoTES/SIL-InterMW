@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>comm</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Middleware communications base Maven configuration</name>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>intermw</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <properties>
+        <final-name>middleware-comm</final-name>
+    </properties>
+
+    <modules>
+        <module>control</module>
+        <module>api.request.manager</module>
+        <!--<module>data.flow.manager</module>-->
+        <module>broker</module>
+        <module>ipsm.request.manager</module>
+        <module>error.handler</module>
+        <module>platform.request.manager</module>
+        <module>comm.commons</module>
+    </modules>
+</project>

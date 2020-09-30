@@ -1,0 +1,6 @@
+PREFIX mdw: <http://interiot.eu/ont/middleware.owl#>
+INSERT DATA {
+  GRAPH <http://devices> {
+    {content}
+  }
+}

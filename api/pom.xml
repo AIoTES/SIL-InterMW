@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>api</artifactId>
+    <packaging>pom</packaging>
+
+    <name>API project for the inter middleware layer</name>
+    <description>API project for the inter middleware layer</description>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>intermw</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <modules>
+        <module>mw.api</module>
+        <module>mw.api.impl</module>
+        <module>mw.api.rest</module>
+    </modules>
+</project>

@@ -1,0 +1,51 @@
+---
+# This is  spec for INTER-IOT MW API Module
+swagger: "2.0"
+info:
+  description: INTER-IoT Middleware API Specification for the Service Broker
+  version: 1.0.0
+  title: INTER-IoT-MW-API-SB
+host: inter-iot.eu
+basePath: /api
+schemes:
+- http
+
+paths:
+  /query: #Implements MW03
+    post:
+      tags:
+      - MW Query
+      description: Posts a query to the SB.
+      operationId: mw-api-sb-query
+      consumes:
+        - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: query
+        in: body
+        description: Contains the plafrom query and request unique id
+        required: true
+        schema: 
+          $ref: "#/definitions/SBQueryRequest"
+      responses:
+        202:
+          description: Successful response - query created (Accepted)
+          examples:
+            application/json :
+              {
+                unique_callback-id : internal-uuid-121231242345,
+                status : sent
+              }
+        400: 
+          description: Bad request (syntax error)
+        403: 
+          description: Forbidden 
+definitions:
+  SBQueryRequest: 
+    type: object
+    properties:
+      unique_request_id:
+        type: string
+      query:
+        type: string

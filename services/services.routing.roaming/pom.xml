@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>services.roaming</artifactId>
+
+    <name>Routing and roaming service for INTER-Middleware</name>
+    <description>A service to maintain the reference of the platform where is sending data an IoT data source
+    </description>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>middleware-services</artifactId>
+        <version>2.3.1</version>
+    </parent>
+</project>

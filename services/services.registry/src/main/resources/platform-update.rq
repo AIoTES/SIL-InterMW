@@ -1,0 +1,25 @@
+PREFIX mdw: <http://interiot.eu/ont/middleware.owl#>
+PREFIX clients: <http://interiot.eu/clients#>
+WITH <http://platforms>
+DELETE {?platformId ?p ?o}
+INSERT {
+  ?platformId mdw:name ?name;
+    mdw:type ?type;
+    mdw:baseEndpoint ?baseEndpoint;
+    mdw:location ?location;
+    mdw:clientId ?clientId;
+    mdw:username ?username;
+    mdw:encryptedPassword ?encryptedPassword;
+    mdw:encryptionAlgorithm ?encryptionAlgorithm;
+    mdw:downstreamInputAlignmentName ?downstreamInputAlignmentName;
+    mdw:downstreamInputAlignmentVersion ?downstreamInputAlignmentVersion;
+    mdw:downstreamOutputAlignmentName ?downstreamOutputAlignmentName;
+    mdw:downstreamOutputAlignmentVersion ?downstreamOutputAlignmentVersion;
+    mdw:upstreamInputAlignmentName ?upstreamInputAlignmentName;
+    mdw:upstreamInputAlignmentVersion ?upstreamInputAlignmentVersion;
+    mdw:upstreamOutputAlignmentName ?upstreamOutputAlignmentName;
+    mdw:upstreamOutputAlignmentVersion ?upstreamOutputAlignmentVersion
+}
+WHERE {
+  ?platformId ?p ?o .
+}

@@ -1,0 +1,48 @@
+title New info from A pushed to topic B,C and INTER-IoT dev subscribed
+
+actor Platform A
+participant Bridge A
+participant Message Broker
+participant Bridge B
+participant Bridge C
+participant IPSM
+participant Service Broker
+actor Platform B
+actor Platform C
+actor INTER-IoT Dev
+
+
+note left of Platform A:Message 1 Ontology A <=> (M1,A)
+Platform A->Bridge A:Publish (M1,A,source_id_a)
+Bridge A->Message Broker:Publish (M1,A,source_id_a)
+note left of Message Broker:There is a topic specifically created\nto receive pushes from each bridge
+
+par Message Broker notifies B and C with the same process
+Message Broker->Bridge B:Publish (M1,A,//bridge_b_ref//,source_id_a)
+note left of Bridge B:Bridge B does not know\nlanguage domain //A//
+Bridge B->IPSM:translate (from A, to B, M1)
+Bridge B<-IPSM:sensor_data (M1'B,B)
+Bridge B->Service Broker:get_element_corresponding(from source_id_a, to B)
+Bridge B<-Service Broker:source_id_a'b
+note left of Bridge B:Bridge B does not know\nwhat is //source_id_a//
+Bridge B->Platform B:Publish (M1'B,B, souce_id_a'b)
+Bridge B<-Platform B:200 OK
+Message Broker<-Bridge B:200 OK
+Message Broker->Bridge C:Publish (M1,A,//bridge_c_ref//,source_id_a)
+note left of Bridge C:Bridge C does not know language domain //A//
+Bridge C->IPSM:translate (from A, to C, M1)
+Bridge C<-IPSM:sensor_data(M1'C,C)
+note left of Bridge C:Bridge C does not know what is //source_id_a//
+Bridge C->Platform B:get_element_corresponding (from source_id_a, to C)
+Bridge C<-Platform B:source_id_a'c
+Bridge C->Platform C:Publish (M1'C,C,source_id_a'c)
+Bridge C<-Platform C:200 OK
+Message Broker<-Bridge C:200 OK
+end
+alt User can suscribe in a known platform ontology
+Message Broker->INTER-IoT Dev:Publish (M1,A,//callback_addr//,source_id_a) 
+else Or can subscribe in the common ontology
+Message Broker->IPSM:translate (from A, to COMMON, M1)
+Message Broker<-IPSM:sensor_data (M1'COMMON,COMMON)
+Message Broker->INTER-IoT Dev:publish (M1'COMMON, //callback_addr//,source_id_a)
+end

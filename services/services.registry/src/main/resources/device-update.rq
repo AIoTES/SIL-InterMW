@@ -1,0 +1,12 @@
+PREFIX mdw: <http://interiot.eu/ont/middleware.owl#>
+WITH <http://devices>
+DELETE {?deviceId ?p ?o}
+INSERT {
+  ?deviceId mdw:name ?name;
+         mdw:hostedBy ?hostedBy;
+         mdw:location ?location;
+         {type}
+}
+WHERE {
+  ?deviceId ?p ?o .
+}

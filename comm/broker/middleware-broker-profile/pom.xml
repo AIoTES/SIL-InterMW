@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mw.comm.broker.profile</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Middleware broker profiles</name>
+    <description>A utility Maven configuration to select the broker implementation at compilation time by passing a
+        profile ID
+    </description>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>mw.comm.broker</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <profiles>
+        <profile>
+            <id>rabbitmq</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <bus>rabbitmq</bus>
+            </properties>
+        </profile>
+        <profile>
+            <id>activemq</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <bus>activemq</bus>
+            </properties>
+        </profile>
+        <profile>
+            <id>opensplice</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <bus>opensplice</bus>
+            </properties>
+        </profile>
+        <profile>
+            <id>kafka</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <bus>kafka</bus>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.interiot.intermw</groupId>
+            <artifactId>mw.comm.broker.${bus}</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>

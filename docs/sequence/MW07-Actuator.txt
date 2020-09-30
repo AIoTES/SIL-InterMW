@@ -1,0 +1,46 @@
+title MW07, MW2MW sends information to device(s)
+
+actor INTER-IoT User
+participant "API\nRequest\nManager" as RM
+participant "Platforms\nRequest\nManager" as PRM
+participant "Platform Registry\nand Capabilities" as PRC
+participant IPSM
+participant "Bridge i" as Bi
+participant "IoT Platform i" as Pi
+participant "Platform Registry\n& Capabilities" as PRC
+
+autonumber
+INTER-IoT User->RM:call("perform", callback, {action info, device, ...})
+)
+
+RM->RM:uniqueCallID=createUniqueId(timestamp, ...)
+note over RM:RM holds mappings - [uniqueCallID, callback]
+
+RM->PRM:execute(uniqueCallID, \naction{perform, action info, device, ...})
+PRM->PRC:getPlatforms(all)
+
+PRC-->PRM:response({...<Bi,Ai>...})
+
+PRM->PRM:uniqueFlowID=createUniqueID(query, QCollection)
+parallel
+RM<--PRM:ok
+parallel off
+[uniqueFlowID, uniqueCallID]
+INTER-IoT User<--RM:uniqueCallId
+alt new flow = T
+par for each bridge Bi
+PRM-#green>IPSM:publish(uniqueFlowID, "perform",IIOTJS{action info, Og})
+IPSM-#green>Bi:publish(uniqueFlowID,\n"perform",IIOTJS{action info, Og})
+Bi->Pi:perform(platform specific parameters)
+Bi<--Pi:ok
+end
+end
+
+
+
+
+
+
+
+
+

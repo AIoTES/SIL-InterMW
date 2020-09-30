@@ -1,0 +1,70 @@
+title MW2MW Subscription request to topic
+
+actor Suscriber
+participant INTER API
+participant Request manager
+participant Publish/Subscribe Context
+
+
+participant MessageBroker
+participant Brige A
+participant Platform A
+participant Bridge B
+participant Platform B
+participant Bridge C
+participant Platform C
+
+participant IPSM
+note over Suscriber:A subscriber will be able to \ncreate a subscription through \nthe system, which will allow \nit to receive as soon as possible\nnews from the publisher about \nany event relevant to the desired topic.
+Suscriber->INTER API:suscribe(user_id, topic,callback)
+INTER API->Request manager:suscribe(user_id, topic, callback)
+Request manager->Request manager:unique_request_id= crete_unique_request_id\n(callback, timestamp)
+Request manager->Request manager:addMapping(unique_request_id,callback, timestamp)\ntimestamp may be used for cleanup/timeout operations
+Request manager->Publish/Subscribe Context:suscribe(unique_request_id, user_id, topic, callback)
+
+
+
+
+
+alt if:  topic exists
+Publish/Subscribe Context->Publish/Subscribe Context:add_list_suscriber_to_topic(unique_request_id, user_id, topic)
+note left of Publish/Subscribe Context:The information of the arrival\nof new information can be obtained\nusing a call-back URL provided by the subscriber.
+Request manager<-Publish/Subscribe Context:callback(unique_request_id, url)
+INTER API<-Request manager:callback(url)
+Suscriber<-INTER API:callback(url)
+else else: topic does not exist
+Publish/Subscribe Context->Publish/Subscribe Context:add_topic_to_list(unique_request_id, topic)
+Publish/Subscribe Context->Publish/Subscribe Context:add_subscriber_to list(unique_request_id, user_id)
+par info
+Publish/Subscribe Context->MessageBroker:subscribe_queue_topic(unique_request_id, platformA, topic)
+
+MessageBroker->Brige A:suscribe_platformA(unique_request_id, topic)
+Brige A->IPSM:translate(from_interiot to platformA, suscribe, topic)
+Brige A<-IPSM:PLATFORM_A_SUBSCRIPTION_TO_TOPIC
+Brige A->Platform A:subscription(unique_request_id, topic)
+Brige A<-Platform A:ok
+MessageBroker<-Brige A:Ok
+Publish/Subscribe Context->MessageBroker:subscribe_queue_topic(unique_request_id, platformB, topic)
+MessageBroker->Bridge B:suscribe_platformB(unique_request_id, topic)
+Bridge B->IPSM:translate(from_interiot to platformB, suscribe, topic)
+Bridge B<-IPSM:PLATFORM_B_SUBSCRIPTION_TO_TOPIC
+Bridge B->Platform B:subscription(unique_request_id, topic)
+Bridge B<-Platform B:ok
+Publish/Subscribe Context->MessageBroker:subscribe_queue_topic(unique_request_id, platformC, topic)
+MessageBroker<-Bridge B:Ok
+MessageBroker->Bridge C:suscribe_platformC(unique_request_id, topic)
+Bridge C->IPSM:translate(from_interiot to platformC, suscribe, topic)
+Bridge C<-IPSM:PLATFORM_C_SUBSCRIPTION_TO_TOPIC
+Bridge C->Platform C:subscription(unique_request_id, topic)
+Bridge C<-Platform C:ok
+MessageBroker<-Bridge C:Ok
+end
+
+Publish/Subscribe Context<-MessageBroker:recieve_subscription_callback(unique_request_id, topic,callback)
+Publish/Subscribe Context->Publish/Subscribe Context:add_list_suscriber_to_topic(unique_request_id, user_id, topic)
+
+note left of Publish/Subscribe Context:The information of the arrival\nof new information can be obtained\nusing a call-back URL provided by the subscriber.
+Request manager<-Publish/Subscribe Context:callback(unique_request_id, url)
+INTER API<-Request manager:callback(url)
+Suscriber<-INTER API:callback(url)
+end

@@ -1,0 +1,11 @@
+PREFIX mdw: <http://interiot.eu/ont/middleware.owl#>
+PREFIX clients: <http://interiot.eu/clients#>
+SELECT *
+WHERE {
+  GRAPH <http://clients> {
+    ?clientId mdw:callbackUrl ?callbackUrl;
+        mdw:receivingCapacity ?receivingCapacity;
+        mdw:responseDelivery ?responseDelivery;
+        mdw:responseFormat ?responseFormat
+  }
+}

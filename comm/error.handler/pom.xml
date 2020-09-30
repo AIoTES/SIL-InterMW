@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>comm.error-handler</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Error handler of the INTER-Middleware</name>
+    <description>It manages error messages from all INTER-Middleware.</description>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>comm</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <modules>
+        <module>error.handler.api</module>
+        <module>error.handler.impl</module>
+    </modules>
+</project>

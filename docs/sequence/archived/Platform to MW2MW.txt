@@ -1,0 +1,69 @@
+
+title Platform to MW2MW
+
+participantspacing equal
+#participantspacing gives manual control of spacing between participants, equal: equal distance between all participants, number i.e. 20.5: minimum space
+
+#supported participant types: participant, actor, boundary, control, entity, database
+
+
+#participant "http://sequencediagram.org/corsimg.php?image=phone.png" as phone
+#supported: cors images with http/https/file URL
+
+
+
+
+
+
+
+
+linear
+linear off
+
+entryspacing 2
+parallel
+parallel off
+entryspacing 1
+
+
+
+
+
+entryspacing 4
+autonumber
+entryspacing 0.1
+entryspacing 1.0
+
+participant Platform A
+
+
+
+
+autonumber 50
+
+
+autonumber 1
+autonumber off
+autonumber
+autonumber 1
+
+
+
+
+
+
+participant Bridge_A [Producer]
+
+participant MessageBroker
+participant IPSM
+note over IPSM:IPSM instance offers channels annotated with source and target semantics/format
+note left of Bridge_A [Producer]:the producer component of a bridge publishes semantic representation of data to the "input topic" of a selected channel
+Platform A->Bridge_A [Producer]:Deserialize(M1)
+Bridge_A [Producer]->MessageBroker:Publish(SemA(M1), chan(OntA, OntB)_inp)
+note left of IPSM:IPSM channel consumes messages from its "input topic", translates them and publishes to its "output topic"
+MessageBroker->IPSM:Consume(SemA(M1), chan(OntA, OntB)_inp)
+IPSM->IPSM:Translate(SemA(M1),chan(OntA, OntB))
+MessageBroker<-IPSM:Publish(SemB(M1), chan(OntA,OntB)_out)
+note left of MessageBroker:there is a topic created to receive messages from each bridge
+Bridge_B [Consumer]<-MessageBroker:Serialize(SemB(M1))
+Platform B<-Bridge_B [Consumer]:NativeB(M1)

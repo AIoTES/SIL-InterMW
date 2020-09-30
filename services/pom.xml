@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>middleware-services</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Middleware services base project</name>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>intermw</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <modules>
+        <module>services.registry</module>
+        <module>services.routing.roaming</module>
+    </modules>
+</project>

@@ -1,0 +1,80 @@
+title Platform A requests join INTER-IoT
+
+participantspacing equal
+
+
+actor Integrator
+participant INTER API
+participant MW2MW API
+participant Request manager
+participant Service Broker
+participant Auth Manager
+participant Accountability
+participant Service Broker
+participant Routing & Roaming Service
+participant Platform Registry & Capabilities
+participant Query Broker
+participant Message Broker
+participant Bridge A (platform_id_a)
+participant Platform A
+
+
+
+
+Integrator->INTER API:join //Platform A// \n <platform_a_base_address, platform_type = A>
+
+
+note over INTER API,MW2MW API:There will be some modules between these\n two (e.g. API Manager), but they are still not defined.
+INTER API->MW2MW API:join //Platform A//\n <platform_a_base_address, platform_type = A>
+MW2MW API->Request manager:join //Platform A//\n <platform_a_base_address, platform_type = A>
+Request manager->Service Broker:join //Platform A//
+Service Broker->Auth Manager:join //Platform A//
+Auth Manager->Accountability:Create account //Platform A//
+Auth Manager<-Accountability:200 New account
+Service Broker<-Auth Manager:200 Access granted, new account
+Request manager<-Service Broker:200 Access granted, new account
+MW2MW API<-Request manager:200 Access granted, new account
+note left of Request manager:Check if there is a bridge for the platform.\n Is the RM the appropiate component to deal with this?
+Request manager->Service Broker:Request capability\n<//platform_type = A//>
+Service Broker->Platform Registry & Capabilities:Request capability\n<//platform_type = A//>
+Platform Registry & Capabilities->Platform Registry & Capabilities:Exists <//platform_type = A//>
+INTER API<-MW2MW API:Access granted
+note right of Platform Registry & Capabilities:Not sure if this check is needed.\nBridges can have a memory reference\nin the Routing and Roaming Service.
+Service Broker<-Platform Registry & Capabilities:Bridge A (platform_id_a) exists (true)
+Request manager<-Service Broker:Bridge A (platform_id_a) exists (true)
+Integrator<-INTER API:Access granted
+
+Request manager->Service Broker:Register\n<//platform_type = A,platform_a_base_address>
+Service Broker->Platform Registry & Capabilities:Register\n<platform_type = A,platform_a_base_address>
+Platform Registry & Capabilities->Platform Registry & Capabilities:Generate new id <//platform_a_id>
+Platform Registry & Capabilities->Platform Registry & Capabilities:Insert\n<//platform_a_id, platform_type = A,platform_a_base_addr>
+note right of Platform Registry & Capabilities:Stores the platform access data
+Platform Registry & Capabilities<-Platform Registry & Capabilities:Insert OK\n <platform_a_id>
+Service Broker<-Platform Registry & Capabilities:Registered\n<//platform_a_id>
+Request manager<-Service Broker:Registered\n<//platform_a_id>
+Request manager->Query Broker:List all entities <platform_a_id>
+Query Broker->Message Broker:List all entities <platform_a_id>
+Message Broker->Bridge A (platform_id_a):List all entities\n<platform_a_id>
+Bridge A (platform_id_a)->Platform A:List all entities
+Bridge A (platform_id_a)<-Platform A:Entity 1
+Message Broker<-Bridge A (platform_id_a):Entity 1
+Query Broker<-Message Broker:Entity 1
+Request manager<-Query Broker:Entity 1
+Bridge A (platform_id_a)<-Platform A:Entity 2
+Message Broker<-Bridge A (platform_id_a):Entity 2
+Query Broker<-Message Broker:Entity 2
+Request manager<-Query Broker:Entity 2
+Bridge A (platform_id_a)<-Platform A:Entity N
+Message Broker<-Bridge A (platform_id_a):Entity N
+Query Broker<-Message Broker:Entity N
+Request manager<-Query Broker:Entity N
+
+Request manager->Service Broker:Register_device(platform_a_id, Entity 1..N)
+Service Broker->Device Registry:Register_device(platform_a_id, Entity 1..N)
+Device Registry->Device Registry:Insert (platform_a_id, Entity 1..N)
+
+Device Registry->Service Broker:OK
+Service Broker->Request manager:OK
+MW2MW API<-Request manager:200 OK
+INTER API<-MW2MW API:200 OK
+Integrator<-INTER API:200 OK

@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>comm.commons</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Common classes/interfaces for the middleware comm project</name>
+    <description>Common classes/interfaces for the middleware comm project</description>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>comm</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <modules>
+        <module>comm.commons.api</module>
+        <module>comm.commons.impl</module>
+    </modules>
+</project>

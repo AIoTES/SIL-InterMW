@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>integration-tests</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Integration tests for Inter Middleware</name>
+
+    <parent>
+        <groupId>eu.interiot.intermw</groupId>
+        <artifactId>intermw</artifactId>
+        <version>2.3.1</version>
+    </parent>
+
+    <modules>
+        <module>integration-test-mw-java-api</module>
+        <module>integration-test-rest-api</module>
+        <module>integration-tests-utils</module>
+    </modules>
+</project>

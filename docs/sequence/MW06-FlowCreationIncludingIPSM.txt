@@ -1,0 +1,35 @@
+title MW06, Flow Creation Including IPSM
+participant "API\nRequest\nManager" as RM
+participant "Platforms\nRequest\nManager" as PRM
+participant "Data Flow\nManager" as DFM
+participant Broker
+participant IPSM
+participant "Bridge i" as Bi
+
+autonumber
+parallel
+PRM->DFM:createFlow(uniqueFlowID, {<B1,A1>, <B2, A2>})
+parallel off
+alt counter=1
+loop for each Bi
+DFM->Broker:T1i=createTopic(uniqueFlowID, Bi, IPSM)
+DFM<--Broker:T1i
+end
+DFM->Broker:T2=createTopic(uniqueFlowID, IPSM, PRM)
+DFM<--Broker:Ta
+DFM->Broker:T3=createTopic(uniqueFlowID, PRM, ARM)
+DFM<--Broker:Tb
+PRM<-DFM:createFlow(uniqueFlowID, Ta, Tb)
+PRM-->DFM:ok
+DFM->IPSM:createFlow(uniqueFlowID, T1, Ti, ...)
+DFM<--IPSM:ok
+loop for each Bi
+DFM->Bi:createFlow(uniqueFlowID, Ti)
+DFM<--Bi:ok
+end loop
+RM<-DFM:createFlow(uniqueFlowID, Tb)
+RM-->DFM:ok
+end
+PRM<--DFM:created new flow T/F
+linear
+linear off

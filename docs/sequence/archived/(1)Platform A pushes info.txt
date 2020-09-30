@@ -1,0 +1,30 @@
+title New info from A pushed to topic INTER-IoT dev subscribed
+
+actor Platform A
+participant Bridge A
+participant Message Broker
+participant Publish/Subscribe Context
+participant Service Broker
+participant Device Registry
+participant IPSM
+participant Service Broker
+actor INTER-IoT Dev
+
+
+note left of Platform A:Message 1 Ontology A <=> (M1,A)
+Platform A->Bridge A:Publish (M1,A,source_id_a)
+Bridge A->Message Broker:Publish (M1,A,source_id_a, platform_id)
+
+note left of Message Broker:INTER-IoT ID <=> iid
+Message Broker->Publish/Subscribe Context:Publish (M1,A,source_id_a, platform_id)
+Publish/Subscribe Context->Service Broker:translate_to_iid (source_id_a, platform_id)
+Service Broker->Device Registry:translate_to_iid(source_id_a, platform_id)
+Service Broker<-Device Registry:source_id_a'
+Publish/Subscribe Context<-Service Broker:source_id_a'
+alt User can suscribe in a known platform ontology
+Publish/Subscribe Context->INTER-IoT Dev:Publish (M1,A,//callback_addr//,source_id_a') 
+else Or can subscribe in the common ontology
+Publish/Subscribe Context->IPSM:translate (from A, to COMMON, M1)
+Publish/Subscribe Context<-IPSM:sensor_data (M1'COMMON,COMMON)
+Publish/Subscribe Context->INTER-IoT Dev:publish (M1'COMMON, //callback_addr//,source_id_a)
+end
